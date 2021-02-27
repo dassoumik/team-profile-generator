@@ -5,9 +5,9 @@ describe("Employee class", () => {
     it("Creates an Employee object", () => {
         const employee = new Employee(1, "Zoltan", "zoltan@fakemail.com");
 
-        expect(employee.ID).toEqual(1);
+        expect(employee.id).toEqual(1);
         expect(employee.name).toEqual("Zoltan");
-        expect(employee.name).toEqual("zoltan@fakemail.com");
+        expect(employee.email).toEqual("zoltan@fakemail.com");
     });
 
     describe("getName", () => {
