@@ -103,7 +103,7 @@ const internQuestions = [{
 
 const choiceQuestion = [{
     type: 'expand',
-    message: 'Please enter "a" to add engineer: ',
+    message: 'Please enter "a" to add engineer "b" to add intern and "c" to finish: ',
     name: 'choiceName',
     choices: [{
             key: "a",
