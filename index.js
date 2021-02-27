@@ -3,7 +3,7 @@ const Manager = require("./lib/Manager.js");
 const Engineer = require("./lib/Engineer.js");
 const Intern = require("./lib/Intern.js");
 const fs = require('fs');
-const htmlgenerator = require("./dist/htmlgenerator");
+const htmlgenerator = require("./src/htmlgenerator");
 
 const inquirer = require('inquirer');
 
@@ -24,6 +24,14 @@ const managerQuestions = [{
         type: 'input',
         message: 'Please enter manager email address: ',
         name: 'managerEmail',
+        validate: function (val) {
+            var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+            if (!val.match(mailformat)) {
+                return "Please enter a valid email";
+            } else {
+                return true;
+            }
+        },
     },
     {
         type: 'input',
@@ -46,6 +54,14 @@ const engineerQuestions = [{
         type: 'input',
         message: 'Please enter engineer email address: ',
         name: 'engineerEmail',
+        validate: function (val) {
+            var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+            if (!val.match(mailformat)) {
+                return "Please enter a valid email";
+            } else {
+                return true;
+            }
+        },
     },
     {
         type: 'input',
@@ -58,6 +74,7 @@ const internQuestions = [{
         type: 'input',
         message: 'Please enter intern name: ',
         name: 'internName',
+
     },
     {
         type: 'input',
@@ -68,6 +85,14 @@ const internQuestions = [{
         type: 'input',
         message: 'Please enter intern email address: ',
         name: 'internEmail',
+        validate: function (val) {
+            var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+            if (!val.match(mailformat)) {
+                return "Please enter a valid email";
+            } else {
+                return true;
+            }
+        },
     },
     {
         type: 'input',
@@ -105,38 +130,33 @@ function writeToFile(fileName, data) {
 }
 
 // Function to initialize app
-async function init() {
+function init() {
     inquirer
         .prompt(managerQuestions)
         .then((res) => {
-            console.log(res);
             const manager = new Manager(res.managerID, res.managerName, res.managerEmail, res.managerOfficeNum)
             employeeArray.push(manager);
             inquirer
                 .prompt(choiceQuestion)
                 .then((res) => {
-                    console.log(res);
                     switchFunction(res)
                 })
         })
 }
 
-async function callPrompts(role) {
+function callPrompts(role) {
     if (role == "intern") {
         inquirer
             .prompt(internQuestions)
             .then((res) => {
-                console.log(res);
                 const intern = new Intern(res.internID, res.internName, res.internEmail, res.internSchool);
                 employeeArray.push(intern);
-                console.log(employeeArray);
                 choiceFunction();
             })
     } else if (role == "engineer") {
         inquirer
             .prompt(engineerQuestions)
             .then((res) => {
-                console.log(res);
                 const engineer = new Engineer(res.engineerID, res.engineerName, res.engineerEmail, res.engineerGitID)
                 employeeArray.push(engineer);
                 choiceFunction();
@@ -144,7 +164,7 @@ async function callPrompts(role) {
     }
 }
 
-async function switchFunction(res) {
+function switchFunction(res) {
     switch (res.choiceName) {
         case "Add Engineer":
             callPrompts("engineer");
@@ -158,22 +178,35 @@ async function switchFunction(res) {
     }
 }
 
-async function choiceFunction() {
+function choiceFunction() {
     inquirer
         .prompt(choiceQuestion)
         .then((res) => {
-            console.log(res);
             switchFunction(res)
         });
 }
 
 function buildTeam() {
     for (const element of employeeArray) {
-        console.log(element.getRole());
-        cardHTML += `<div class="card mt-5 text-center" style="margin: 0 auto; max-width: 12rem;">
+        const role = element.getRole();
+        let logo;
+        switch (role) {
+            case "Manager":
+                logo = '<i class="fas fa-award"></i>';
+                break;
+            case "Engineer":
+                logo = '<i class="fas fa-certificate"></i>';
+                break;
+            case "Intern":
+                logo = '<i class="fas fa-cannabis"></i>';
+                break;
+            default:
+                break;
+        }
+        cardHTML += `<div class="card mt-5 text-center border rounded-lg" style="margin: 0 auto; min-width: 12rem; max-width: 12rem;">
       <div class="card-header text-white bg-primary" style="height: 4rem; line-height:.5em;">
           <p>${element.getName()}</p>
-          <p>${element.getRole()}</p>
+          <p><span>${logo}</span> ${role}</p>
       </div>
       <div class="card-body">
           <h5 class="card-title">ID:${element.getID()}</h5>
@@ -198,9 +231,8 @@ function buildTeam() {
         }
 
     };
-    console.log(cardHTML);
     const htmlContent = htmlgenerator(cardHTML);
-    writeToFile("./generated-files/index.html", htmlContent);
+    writeToFile("./dist/index.html", htmlContent);
     return false;
 }
 
