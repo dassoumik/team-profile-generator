@@ -203,7 +203,7 @@ function buildTeam() {
             default:
                 break;
         }
-        cardHTML += `<div class="card mt-5 text-center border rounded-lg" style="margin: 0 auto; min-width: 12rem; max-width: 12rem;">
+        cardHTML += `<div class="card mt-5 text-center border rounded-lg shadow-lg" style="margin: 0 auto; border-style: ridge; min-width: 12rem; max-width: 12rem;">
       <div class="card-header text-white bg-primary" style="height: 4rem; line-height:.5em;">
           <p>${element.getName()}</p>
           <p><span>${logo}</span> ${role}</p>
@@ -219,7 +219,7 @@ function buildTeam() {
           </div>`;
                 break;
             case "Engineer":
-                cardHTML += `<p calss="card-text">Git: <a href="https://github.com/${element.gituserid}" target="_blank">${element.gituserid}</a></p>
+                cardHTML += `<p calss="card-text">Git UserID: <a href="https://github.com/${element.gituserid}" target="_blank">${element.gituserid}</a></p>
               </div>
           </div>`;
                 break;
